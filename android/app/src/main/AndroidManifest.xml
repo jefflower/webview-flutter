@@ -26,7 +26,6 @@
         android:fullBackupContent="true"
         android:hardwareAccelerated="true"
         android:largeHeap="true"
-        android:requestLegacyExternalStorage="true"
         android:usesCleartextTraffic="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         tools:targetApi="22">
