@@ -1,7 +1,6 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
-    id 'dev.flutter.flutter-gradle-plugin'
 }
 
 def localProperties = new Properties()
@@ -12,22 +11,18 @@ if (localPropertiesFile.exists()) {
     }
 }
 
-def flutterRoot = localProperties.getProperty('flutter.sdk')
-if (flutterRoot == null) {
+def flutterRoot = file("${project.rootDir}/../.flutter")
+if (!flutterRoot.exists()) {
+    flutterRoot = file("${project.rootDir}/../.pub-cache/flutter")
+}
+if (!flutterRoot.exists()) {
     throw new org.gradle.api.GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
 }
 
-def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
-if (flutterVersionCode == null) {
-    flutterVersionCode = '1'
-}
+def flutterVersionCode = '1'
+def flutterVersionName = '1.0'
 
-def flutterVersionName = localProperties.getProperty('flutter.versionName')
-if (flutterVersionName == null) {
-    flutterVersionName = '1.0'
-}
-
-apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
+apply from: "${flutterRoot}/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
     namespace "com.microhis.webview"
