@@ -95,10 +95,12 @@ configurations.all {
         force 'androidx.startup:startup-runtime:1.0.0'
         
         // Flutter 特定依赖
-        force 'androidx.window:window:1.0.0-alpha09'
-        force 'androidx.window:window-java:1.0.0-alpha09'
         force 'androidx.webkit:webkit:1.0.0'
         force 'androidx.browser:browser:1.0.0'
+        
+        // 排除 window 相关依赖
+        exclude group: 'androidx.window', module: 'window'
+        exclude group: 'androidx.window', module: 'window-java'
     }
 }
 
@@ -113,8 +115,6 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-common-java8:2.1.0'
     
     // Flutter 特定依赖
-    implementation 'androidx.window:window:1.0.0-alpha09'
-    implementation 'androidx.window:window-java:1.0.0-alpha09'
     implementation 'androidx.webkit:webkit:1.0.0'
     implementation 'androidx.browser:browser:1.0.0'
     
