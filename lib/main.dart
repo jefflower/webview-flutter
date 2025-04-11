@@ -8,8 +8,6 @@ Future<void> main() async {
   // 配置 WebView
   if (Platform.isAndroid) {
     await AndroidInAppWebViewController.setWebContentsDebuggingEnabled(true);
-    await InAppWebViewController.setDefaultUserAgent(
-        'Mozilla/5.0 (Linux; Android 5.7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36');
   }
 
   // 捕获全局错误
@@ -98,6 +96,8 @@ class _WebViewPageState extends State<WebViewPage> {
                         mediaPlaybackRequiresUserGesture: false,
                         javaScriptEnabled: true,
                         javaScriptCanOpenWindowsAutomatically: true,
+                        userAgent:
+                            'Mozilla/5.0 (Linux; Android 5.7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36',
                       ),
                       android: AndroidInAppWebViewOptions(
                         useHybridComposition: true,
