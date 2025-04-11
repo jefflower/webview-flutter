@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'dart:io';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  if (Platform.isAndroid) {
+    await AndroidInAppWebViewController.setWebContentsDebuggingEnabled(true);
+  }
+
   runApp(const MyApp());
 }
 
@@ -31,6 +37,7 @@ class WebViewPage extends StatefulWidget {
 class _WebViewPageState extends State<WebViewPage> {
   final String initialUrl = 'https://www.baidu.com';
   double progress = 0;
+  String? errorMessage;
 
   @override
   Widget build(BuildContext context) {
@@ -41,31 +48,54 @@ class _WebViewPageState extends State<WebViewPage> {
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: () {
-              if (context.mounted) {
-                InAppWebViewController? webViewController = context
-                    .findAncestorStateOfType<_WebViewPageState>()
-                    ?.webViewController;
-                webViewController?.reload();
-              }
+              webViewController?.reload();
             },
           ),
         ],
       ),
       body: Column(
         children: [
-          progress < 1.0
-              ? LinearProgressIndicator(value: progress)
-              : const SizedBox(),
+          if (progress < 1.0) LinearProgressIndicator(value: progress),
+          if (errorMessage != null)
+            Container(
+              padding: const EdgeInsets.all(16),
+              color: Colors.red[100],
+              child: Text(
+                '加载错误: $errorMessage',
+                style: const TextStyle(color: Colors.red),
+              ),
+            ),
           Expanded(
             child: InAppWebView(
               initialUrlRequest: URLRequest(url: WebUri(initialUrl)),
               onWebViewCreated: (controller) {
                 webViewController = controller;
               },
+              onLoadStart: (controller, url) {
+                setState(() {
+                  errorMessage = null;
+                });
+              },
               onProgressChanged: (controller, progress) {
                 setState(() {
                   this.progress = progress / 100;
                 });
+              },
+              onLoadError: (controller, url, code, message) {
+                setState(() {
+                  errorMessage = message;
+                });
+              },
+              onLoadHttpError: (controller, url, statusCode, description) {
+                setState(() {
+                  errorMessage = 'HTTP Error $statusCode: $description';
+                });
+              },
+              androidOnPermissionRequest:
+                  (controller, origin, resources) async {
+                return PermissionRequestResponse(
+                    resources: resources,
+                    action: PermissionRequestResponseAction.GRANT);
               },
             ),
           ),
@@ -75,4 +105,10 @@ class _WebViewPageState extends State<WebViewPage> {
   }
 
   InAppWebViewController? webViewController;
+
+  @override
+  void dispose() {
+    webViewController?.dispose();
+    super.dispose();
+  }
 }
