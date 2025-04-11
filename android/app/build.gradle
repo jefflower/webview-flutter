@@ -27,12 +27,12 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
     namespace "com.microhis.webview"
-    compileSdkVersion 33
+    compileSdkVersion 34
 
     defaultConfig {
         applicationId "com.microhis.webview"
-        minSdkVersion 21
-        targetSdkVersion 33
+        minSdkVersion 22
+        targetSdkVersion 28
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
@@ -41,6 +41,11 @@ android {
         release {
             signingConfig signingConfigs.debug
         }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
